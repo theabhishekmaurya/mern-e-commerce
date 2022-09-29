@@ -1,38 +1,44 @@
-.App {
-  text-align: center;
+body {
+  font-family: "Josefin Sans";
+  background-color: #eef1ff;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+::-webkit-scrollbar {
+  width: 0px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.category-image {
+  transition: all ease 0.3s;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.category-image:hover {
+  opacity: 0.9;
+  cursor: pointer;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 
-.App-link {
-  color: #61dafb;
+.primaryColor {
+  color: #424874;
+}
+#primaryBgColor {
+  background-color: #424874;
+}
+#primaryBgColor:hover {
+  background-color: #a6b1e1;
+  color: #424874;
+}
+.storeName:hover {
+  cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.link {
+  color: #424874;
+
+  text-decoration: none;
 }
