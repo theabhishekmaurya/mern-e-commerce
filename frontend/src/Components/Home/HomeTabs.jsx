@@ -15,7 +15,13 @@ export default function HomeTabs() {
 
   return (
     <Box
-      display={pathname == "/signin" || pathname == "/signup" ? "none" : "flex"}
+      display={
+        pathname == "/signin" ||
+        pathname.startsWith("/users") ||
+        pathname == "/signup"
+          ? "none"
+          : "flex"
+      }
       justifyContent="center"
       sx={{ width: "100%", bgcolor: "background.paper" }}
       padding={{ xs: "5px 0", sm: "10px 0" }}

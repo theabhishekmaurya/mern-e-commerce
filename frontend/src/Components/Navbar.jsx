@@ -113,7 +113,7 @@ export default function PrimarySearchAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }} 
-    display={pathname.startsWith("/dashboard") ? "none" : "block"}
+    display={pathname.startsWith("/dashboard") || pathname.startsWith("/users") ? "none" : "block"}
     >
       <AppBar
         position="static"

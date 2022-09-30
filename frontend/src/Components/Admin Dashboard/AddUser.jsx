@@ -45,7 +45,7 @@ const AddUser = () => {
         Add User
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
           <TextField
             autoComplete="given-name"
             name="firstName"
@@ -56,7 +56,7 @@ const AddUser = () => {
             autoFocus
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
           <TextField
             required
             fullWidth
@@ -67,7 +67,7 @@ const AddUser = () => {
           />
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={8}>
           <TextField
             required
             fullWidth
@@ -77,7 +77,7 @@ const AddUser = () => {
             autoComplete="email"
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={8}>
           <FormControl fullWidth required>
             <InputLabel id="demo-simple-select-label">User Type</InputLabel>
             <Select
@@ -93,7 +93,7 @@ const AddUser = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={8}>
           <TextField
             required
             fullWidth
@@ -104,44 +104,46 @@ const AddUser = () => {
             autoComplete="new-password"
           />
         </Grid>
+        <Grid item xs={12} sm={8} m={"10px 0"}>
+          <InputLabel id="demo-simple-select-label">Select Image</InputLabel>
+          <FormControl fullWidth required>
+            <Stack direction="row" alignItems="center" m={"2px 0"} spacing={1}>
+              <Button
+                variant="contained"
+                component="label"
+                id="primaryBgColor"
+                onClick={handleUpload}
+              >
+                {uploadText ? "Uploading..." : "Upload"}
+              </Button>
+              <IconButton
+                color="primary"
+                aria-label="upload picture"
+                component="label"
+              >
+                <input
+                  hidden
+                  accept="image/*"
+                  onChange={handleChange}
+                  type="file"
+                />
+                <PhotoCamera sx={{ color: "#424874" }} />
+              </IconButton>
+            </Stack>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            id="primaryBgColor"
+          >
+            Add User
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item xs={12} m={"10px 0"}>
-        <InputLabel id="demo-simple-select-label">Select Image</InputLabel>
-        <FormControl fullWidth required>
-          <Stack direction="row" alignItems="center" m={"2px 0"} spacing={1}>
-            <Button
-              variant="contained"
-              component="label"
-              id="primaryBgColor"
-              onClick={handleUpload}
-            >
-              {uploadText ? "Uploading..." : "Upload"}
-            </Button>
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="label"
-            >
-              <input
-                hidden
-                accept="image/*"
-                onChange={handleChange}
-                type="file"
-              />
-              <PhotoCamera sx={{ color: "#424874" }} />
-            </IconButton>
-          </Stack>
-        </FormControl>
-      </Grid>
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-        id="primaryBgColor"
-      >
-        Add User
-      </Button>
     </Box>
   );
 };

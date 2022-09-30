@@ -14,13 +14,17 @@ const Footer = () => {
     "Wishlist",
   ];
 
-  const {pathname} = useLocation()
+  const { pathname } = useLocation();
 
   return (
     <Box
       sx={{ flexGrow: 1 }}
       marginTop={5}
-      display={pathname.startsWith("/dashboard") ? "none" : { xs: "none", sm: "block" }}
+      display={
+        pathname.startsWith("/dashboard") || pathname.startsWith("/users")
+          ? "none"
+          : { xs: "none", sm: "block" }
+      }
       // display={}
       backgroundColor="#F4EEFF"
     >

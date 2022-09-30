@@ -1,22 +1,45 @@
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
   Button,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import React from "react";
+import axios from "axios";
 
 const AddProduct = () => {
   const [sellers, setSellers] = React.useState([
     { name: "Abhishek" },
     { name: "Aman" },
   ]);
-  const handleChange = () => {};
+  const [imageSelected, setImageSelected] = React.useState("");
+  const [uploadText, setUploadText] = React.useState(false);
+  const handleChange = (e) => {
+    setImageSelected(e.target.files[0]);
+  };
+
+  const handleUpload = () => {
+    setUploadText(true);
+    const formData = new FormData();
+    formData.append("file", imageSelected);
+    formData.append("upload_preset", "myecommerce");
+
+    axios
+      .post("https://api.cloudinary.com/v1_1/dgelxfhx7/image/upload", formData)
+      .then((res) => {
+        console.log(res);
+        setUploadText(false);
+      });
+  };
+
   return (
     <Container>
       <Typography component="h1" variant="h5" m={"10px 0px"}>
@@ -24,7 +47,7 @@ const AddProduct = () => {
       </Typography>
       <Box component="form">
         <Grid container spacing={2}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} sm={8}>
             <TextField
               autoComplete="given-name"
               name="title"
@@ -36,16 +59,49 @@ const AddProduct = () => {
             />
           </Grid>
 
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} sm={8} md={6}>
             <TextField
-              required
+              required={!uploadText}
               fullWidth
               id="image"
               label="Image Link"
               name="email"
             />
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth required>
+              <Stack
+                direction="row"
+                alignItems="center"
+                m={"5px 0"}
+                spacing={1}
+              >
+                <Typography>OR</Typography>
+                <Button
+                  variant="contained"
+                  component="label"
+                  id="primaryBgColor"
+                  onClick={handleUpload}
+                >
+                  {uploadText ? "Uploading..." : "Upload"}
+                </Button>
+                <IconButton
+                  color="primary"
+                  aria-label="upload picture"
+                  component="label"
+                >
+                  <input
+                    hidden
+                    accept="image/*"
+                    onChange={handleChange}
+                    type="file"
+                  />
+                  <PhotoCamera sx={{ color: "#424874" }} />
+                </IconButton>
+              </Stack>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={8}>
             <TextField
               required
               type="number"
@@ -55,7 +111,7 @@ const AddProduct = () => {
               id="password"
             />
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} sm={8}>
             <FormControl fullWidth required>
               <InputLabel id="demo-simple-select-label">Category</InputLabel>
               <Select
@@ -73,7 +129,7 @@ const AddProduct = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} sm={8}>
             <FormControl fullWidth required>
               <InputLabel id="demo-simple-select-label">Seller</InputLabel>
               <Select
@@ -92,8 +148,8 @@ const AddProduct = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12}>
-            <Button id="primaryBgColor" variant="contained">
+          <Grid item xs={12} sm={8}>
+            <Button id="primaryBgColor" fullWidth variant="contained">
               Add Product
             </Button>
           </Grid>
