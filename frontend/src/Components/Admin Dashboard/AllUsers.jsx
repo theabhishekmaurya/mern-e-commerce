@@ -133,6 +133,23 @@ export default function CustomPaginationActionsTable() {
         console.log(res);
       });
   };
+  const deleteUser = (email) => {
+    axios
+      .post(
+        `${process.env.REACT_APP_SERVER_BASE_URL}/admin/delete-user/${email}`
+      )
+      .then((res) => {
+        axios
+          .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-users`)
+          .then((res) => {
+            console.log(res);
+            setUsers(res.data);
+          });
+      })
+      .catch((res) => {
+        console.log(res);
+      });
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -174,6 +191,9 @@ export default function CustomPaginationActionsTable() {
                   </Button>
                 </TableCell>
               )}
+              <TableCell style={{ width: 160 }} align="right">
+                <Button onClick={() => deleteUser(user.email)}>Remove</Button>
+              </TableCell>
             </TableRow>
           ))}
 

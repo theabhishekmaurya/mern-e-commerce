@@ -84,4 +84,13 @@ router.post("/approve-seller/:email", async (req, res) => {
   }
 });
 
+router.post("/delete-user/:email", async (req, res) => {
+  try {
+    await User.findOneAndDelete({ email: req.params.email });
+    return res.status(200).send("Deleted");
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
 module.exports = router;
