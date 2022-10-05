@@ -5,6 +5,7 @@ import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import MailRoundedIcon from "@mui/icons-material/MailRounded";
 import { useLocation } from "react-router-dom";
+
 const Footer = () => {
   const usefulLinks = [
     "Home",
@@ -21,11 +22,13 @@ const Footer = () => {
       sx={{ flexGrow: 1 }}
       marginTop={5}
       display={
-        pathname.startsWith("/dashboard") || pathname.startsWith("/users")
+        pathname == "/signin" ||
+        pathname == "/signup" ||
+        pathname.startsWith("/dashboard") ||
+        pathname.startsWith("/users")
           ? "none"
           : { xs: "none", sm: "block" }
       }
-      // display={}
       backgroundColor="#F4EEFF"
     >
       <Stack
@@ -53,13 +56,13 @@ const Footer = () => {
           </Typography>
           <Box gap={8} display="flex">
             <Stack>
-              {usefulLinks.map((item) => (
-                <Typography paragaraph>{item}</Typography>
+              {usefulLinks.map((item, index) => (
+                <Typography key={item+index} paragaraph>{item}</Typography>
               ))}
             </Stack>
             <Stack>
-              {usefulLinks.map((item) => (
-                <Typography paragaraph>{item}</Typography>
+              {usefulLinks.map((item, index) => (
+                <Typography key={item+index} paragaraph>{item}</Typography>
               ))}
             </Stack>
           </Box>

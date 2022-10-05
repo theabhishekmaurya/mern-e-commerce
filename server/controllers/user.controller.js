@@ -1,11 +1,11 @@
 const express = require("express");
 const { body, validationResult, check } = require("express-validator");
-const { appendFile } = require("fs");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendmail");
+const bcrypt = require("bcryptjs");
 const Token = require("../models/token.model");
 const User = require("../models/user.model");
-
+const verifyToken = require("../utils/verifyToken");
 const router = express.Router();
 
 const newToken = (user) => {
@@ -68,48 +68,43 @@ router.post(
 );
 
 // login a user
-router.post(
-  "/signin",
-  body("email").notEmpty().isEmail(),
-  body("password").notEmpty(),
-  async (req, res) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-      const { email, password } = req.body;
-      const user = await User.findOne({ email });
-      if (!user) {
-        res.status(400).send("Enter valid email and password");
-      }
-      const match = user.checkPassword(password);
-      if (!match) {
-        res.status(400).send("Enter valid email and password");
-      }
+router.post("/signin", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).send("Enter valid email and password");
+    }
+    const match = user.checkPassword(password);
+    if (!match) {
+      return res.status(400).send("Enter valid email and password");
+    }
 
-      if (!user.verified) {
-        let token = await Token.findOne({ userId: user._id });
-        if (!token) {
-          const token = await new Token({
-            userId: user._id,
-            token: newToken(user),
-          }).save();
-
-          const url = `${process.env.CLIENT_BASE_URL}/users/${user._id}/verify/${token.token}`;
-          const message = "Click on the link to verify your email :" + url;
-          sendEmail(user.email, "Verify Email", message);
-          res.status(201).send("Verification mail sent");
-        }
+    if (!user.verified) {
+      let findToken = await Token.find({ userId: user._id });
+      let url = "";
+      if (findToken.length == 0) {
+        const token = await new Token({
+          userId: user._id,
+          token: newToken(user),
+        }).save();
+        url = `${process.env.CLIENT_BASE_URL}/users/${user._id}/verify/${token.token}`;
+      } else {
+        url = `${process.env.CLIENT_BASE_URL}/users/${user._id}/verify/${findToken[0].token}`;
       }
-
+      const message =
+        "Click on this one time link to verify your email :" + url;
+      console.log(url);
+      sendEmail(user.email, "Verify Email", message);
+      return res.send({ emailSent: "Verification mail sent" });
+    } else {
       let token = newToken(user);
       return res.send({ token, user });
-    } catch (e) {
-      res.send(e.message);
     }
+  } catch (e) {
+    res.send(e.message);
   }
-);
+});
 
 //verify email
 router.get("/:id/verify/:token", async (req, res) => {
@@ -125,9 +120,9 @@ router.get("/:id/verify/:token", async (req, res) => {
     if (!token) {
       return res.status(400).send({ message: "Invalid Link" });
     }
-
-    await User.updateOne({ _id: user._id, verified: true });
+    await User.updateOne({ _id: user._id }, { verified: true });
     await token.remove();
+    return res.send("Link verified");
   } catch (error) {
     console.log(error.message);
     res.status(400).send({ message: "Error : " + error.meesage });
@@ -138,17 +133,99 @@ router.get("/:id/verify/:token", async (req, res) => {
 router.post("/forgot-password", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.resetEmail });
-    console.log(user);
+
     if (!user) {
       return res.status(400).send("Enter valid email");
     }
-
-    const token = newToken(user);
-    const url = `${process.env.CLIENT_BASE_URL}/users/${user._id}/forgot-password/${token}`;
-    const message = "Open the link to reset the password :" + url;
+    if (!user.verified) {
+      return res.status(400).send("Enter valid email");
+    }
+    let findToken = await Token.findOne({ userId: user._id });
+    let url = "";
+    if (!findToken) {
+      var createToken = await new Token({
+        userId: user._id,
+        token: newToken(user),
+      }).save();
+      url = `${process.env.CLIENT_BASE_URL}/users/${user._id}/forgot-password/${createToken.token}`;
+    } else {
+      url = `${process.env.CLIENT_BASE_URL}/users/${user._id}/forgot-password/${findToken.token}`;
+    }
+    const message = "Open the one time link to reset the password :" + url;
     sendEmail(req.body.resetEmail, "Password Reset", message);
 
     res.send("Email sent successfully");
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+//update password
+router.post(
+  "/update-password/:id",
+  check("newPass")
+    .notEmpty()
+    .isLength({ min: 5 })
+    .withMessage("must be at least 5 chars long")
+    .matches(/\d/)
+    .withMessage("must contain a number"),
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() });
+      }
+      const token = await Token.findOne({ userId: req.params.id });
+      var hash = bcrypt.hashSync(req.body.newPass, 8);
+      await User.updateOne({ _id: req.params.id }, { password: hash });
+      await token.remove();
+
+      res.status(200).send({ msg: "Password Updated" });
+    } catch (error) {
+      return res.send(error.message);
+    }
+  }
+);
+
+//check update link valid or not
+router.get("/update-password/:id/:token", async (req, res) => {
+  try {
+    const token = await Token.findOne({ token: req.params.token });
+    const user = await User.findOne({ _id: req.params.id });
+    if (!user || !token) return res.status(400).send({ msg: "Link not valid" });
+    else {
+      return res.status(200).send("okay");
+    }
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+//seller request (check)
+router.get("/check-seller-request", async (req, res) => {
+  try {
+    const token = req.headers.token;
+    const user = await verifyToken(token);
+
+    res.status(200).send(user.user.sellerReq);
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+//send seller request
+router.get("/send-seller-request", async (req, res) => {
+  try {
+    const token = req.headers.token;
+    const user = await verifyToken(token);
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: user.user._id },
+      { sellerReq: true }
+    );
+
+    const updatedToken = newToken(updatedUser);
+    return res.status(200).send(updatedToken);
   } catch (error) {
     res.send(error.message);
   }

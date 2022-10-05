@@ -15,6 +15,9 @@ import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "./Redux/authSlice";
+import BecomeSeller from "./User/BecomeSeller";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -57,16 +60,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
-  const [username, setUsername] = React.useState("Login");
+  const { isAuth } = useSelector((state) => state.auth);
+  const { userDet } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [becomeSeller, setBecomeSeller] = React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event) => {
-    if (username == "Login") {
+    if (!isAuth) {
       navigate("/signin");
     } else {
       setAnchorEl(event.currentTarget);
@@ -81,11 +87,29 @@ export default function PrimarySearchAppBar() {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
+  const handleLogout = () => {
+    dispatch(logout());
+    handleMenuClose();
+  };
+
+  const handleBecomeSeller = () => {
+    if (userDet.type === "seller" || userDet.type === "admin") {
+      setAnchorEl(null);
+      navigate("/dashboard");
+    } else {
+      setBecomeSeller(true);
+    }
+  };
+
+  const handleRightMenu = (menu) => {
+    if (!isAuth) return;
+
+    navigate(menu === "cart" ? "/cart" : "/wishlist");
+  };
 
   const redirectToHome = () => {
     navigate("/");
   };
-
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -106,14 +130,24 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleBecomeSeller}>
+        {userDet.type === "seller" || userDet.type === "admin"
+          ? "Admin Dashboard"
+          : "Become a seller"}
+      </MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
 
-  const {pathname} = useLocation()
-
+  const { pathname } = useLocation();
   return (
-    <Box sx={{ flexGrow: 1 }} 
-    display={pathname.startsWith("/dashboard") || pathname.startsWith("/users") ? "none" : "block"}
+    <Box
+      sx={{ flexGrow: 1 }}
+      display={
+        pathname.startsWith("/dashboard") || pathname.startsWith("/users")
+          ? "none"
+          : "block"
+      }
     >
       <AppBar
         position="static"
@@ -162,13 +196,14 @@ export default function PrimarySearchAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <Typography>{username}</Typography>
+              <Typography>{!isAuth ? "Login" : userDet.name}</Typography>
               <KeyboardArrowDownRoundedIcon />
             </IconButton>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              onClick={() => handleRightMenu("wishlist")}
             >
               <Badge badgeContent={4} color="secondary">
                 <FavoriteRoundedIcon />
@@ -178,6 +213,7 @@ export default function PrimarySearchAppBar() {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              onClick={() => handleRightMenu("cart")}
             >
               <Badge badgeContent={4} color="secondary">
                 <ShoppingCartRoundedIcon />
@@ -186,7 +222,10 @@ export default function PrimarySearchAppBar() {
           </Box>
         </Toolbar>
       </AppBar>
-
+      <BecomeSeller />
+      {becomeSeller && (
+        <BecomeSeller open={becomeSeller} setBecomeSeller={setBecomeSeller} />
+      )}
       {renderMenu}
     </Box>
   );

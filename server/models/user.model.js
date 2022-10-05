@@ -7,9 +7,10 @@ const userSchema = mongoose.Schema(
     lastName: { type: String },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    type: { type: String, required: true, default: "user" },
+    type: { type: String, required: true, default: "customer" },
     profilePic: { type: String },
     verified: { type: Boolean, default: false },
+    sellerReq: { type: Boolean, default: false },
   },
   {
     timestamps: true,

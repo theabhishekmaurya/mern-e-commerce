@@ -15,12 +15,30 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import SimpleSnackbar from "../Pages/Snackbar";
 
 const AddUser = () => {
   const [imageSelected, setImageSelected] = React.useState("");
   const [uploadText, setUploadText] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const [userDet, setUserDet] = React.useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    type: "",
+    profilePic: "",
+  });
+
   const handleChange = (e) => {
-    setImageSelected(e.target.files[0]);
+    let type = e.target.type;
+    if (type == "file") {
+      setImageSelected(e.target.files[0]);
+    } else {
+      setUserDet({ ...userDet, [e.target.name]: e.target.value });
+    }
   };
 
   const handleUpload = () => {
@@ -34,16 +52,54 @@ const AddUser = () => {
       .then((res) => {
         console.log(res);
         setUploadText(false);
+        setUserDet({ ...userDet, ["profilePic"]: res.data.url });
       });
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    axios
+      .post(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/add-user`, userDet)
+      .then((res) => {
+        console.log(res);
+        setSuccess(true);
+        setLoading(false);
+        setUserDet({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          type: "",
+          profilePic: "",
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+        setLoading(false);
+        setError(true);
+      });
+  };
 
   return (
     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
       <Typography component="h1" variant="h5" m={"10px 0px"}>
         Add User
       </Typography>
+      {error && (
+        <SimpleSnackbar
+          open={error}
+          setOpen={setError}
+          message={"Error occurs, possibly email already exist"}
+        />
+      )}
+      {success && (
+        <SimpleSnackbar
+          open={success}
+          setOpen={setSuccess}
+          message={"User added"}
+        />
+      )}
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
           <TextField
@@ -53,17 +109,20 @@ const AddUser = () => {
             fullWidth
             id="firstName"
             label="First Name"
+            value={userDet.firstName}
+            onChange={handleChange}
             autoFocus
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
-            required
             fullWidth
             id="lastName"
             label="Last Name"
             name="lastName"
+            value={userDet.lastName}
             autoComplete="family-name"
+            onChange={handleChange}
           />
         </Grid>
 
@@ -73,7 +132,9 @@ const AddUser = () => {
             fullWidth
             id="email"
             label="Email Address"
+            onChange={handleChange}
             name="email"
+            value={userDet.email}
             autoComplete="email"
           />
         </Grid>
@@ -83,9 +144,10 @@ const AddUser = () => {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              // value={}
+              value={userDet.type}
               label="User Type"
-              // onChange={handleChange}
+              onChange={handleChange}
+              name="type"
             >
               <MenuItem value="customer">Customer</MenuItem>
               <MenuItem value="seller">Seller</MenuItem>
@@ -100,8 +162,10 @@ const AddUser = () => {
             name="password"
             label="Password"
             type="password"
+            value={userDet.password}
             id="password"
             autoComplete="new-password"
+            onChange={handleChange}
           />
         </Grid>
         <Grid item xs={12} sm={8} m={"10px 0"}>
@@ -112,6 +176,7 @@ const AddUser = () => {
                 variant="contained"
                 component="label"
                 id="primaryBgColor"
+                disabled={!imageSelected}
                 onClick={handleUpload}
               >
                 {uploadText ? "Uploading..." : "Upload"}
@@ -137,6 +202,12 @@ const AddUser = () => {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={
+              userDet.firstName === "" ||
+              userDet.email === "" ||
+              userDet.password === "" ||
+              userDet.type === ""
+            }
             sx={{ mt: 3, mb: 2 }}
             id="primaryBgColor"
           >

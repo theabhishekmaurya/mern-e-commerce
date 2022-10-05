@@ -17,10 +17,31 @@ import AddUser from "./AddUser";
 import AllUsers from "./AllUsers";
 import AllProducts from "./AllProducts";
 import AllOrders from "./AllOrders";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Unauthorized from "./Unauthorized";
 
 const drawerWidth = 240;
 
 export default function PermanentDrawerLeft() {
+  const { token } = useSelector((state) => state.auth);
+  const { userDet } = useSelector((state) => state.user);
+  const { type } = userDet;
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/verify`, {
+        headers: { token },
+      })
+      .then((res) => {
+        if (res.data === "customer") {
+          navigate("/");
+        }
+      });
+  }, []);
+
   const [activeMenu, setActiveMenu] = React.useState("Add Product");
   const setOption = (text) => {
     setActiveMenu(text);
@@ -40,6 +61,15 @@ export default function PermanentDrawerLeft() {
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
             Admin Dashboard
+          </Typography>
+          <Typography
+            sx={{ cursor: "pointer" }}
+            onClick={() => navigate("/")}
+            m={"0px 20px"}
+            noWrap
+            component="div"
+          >
+            Go Back
           </Typography>
         </Toolbar>
       </AppBar>
@@ -90,15 +120,17 @@ export default function PermanentDrawerLeft() {
       >
         {activeMenu == "Add Product" ? (
           <AddProduct />
-        ) : activeMenu == "Add User" ? (
+        ) : activeMenu == "Add User" && type === "admin" ? (
           <AddUser />
-        ) : activeMenu == "All Users" ? (
+        ) : activeMenu == "All Users" && type === "admin" ? (
           <AllUsers />
-        ) : activeMenu == "All Products" ? (
+        ) : activeMenu == "All Products" && type === "admin" ? (
           <AllProducts />
-        ) : activeMenu == "All Orders" ? (
+        ) : activeMenu == "All Orders" && type === "admin" ? (
           <AllOrders />
-        ) : null}
+        ) : (
+          <Unauthorized/>
+        )}
       </Box>
     </Box>
   );

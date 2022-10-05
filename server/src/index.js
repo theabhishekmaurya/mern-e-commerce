@@ -1,8 +1,8 @@
 const express = require("express");
 require("dotenv").config();
-const cors = require("cors")
+const cors = require("cors");
 const userController = require("../controllers/user.controller");
-
+const adminController = require("../controllers/admin.controller");
 const connect = require("../configs/db");
 
 const PORT = process.env.port || 5000;
@@ -15,6 +15,7 @@ app.use(
 );
 app.use(express.json());
 app.use("/users", userController);
+app.use("/admin", adminController);
 
 app.listen(PORT, async () => {
   try {

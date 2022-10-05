@@ -33,6 +33,7 @@ export default function SignUp() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setSuccess(false);
     setUserData({
       ...userData,
       [name]: value,
@@ -63,7 +64,7 @@ export default function SignUp() {
             setLoading(false);
             return;
           }
-          console.log(res);
+          
           setLoading(false);
           setSuccess(true);
           setUserData({

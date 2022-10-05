@@ -5,7 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -19,14 +19,30 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Alert } from "@mui/material";
 
+import { useSelector, useDispatch } from "react-redux";
+import { login } from "../Redux/authSlice";
+import { setUser } from "../Redux/userSlice";
 import axios from "axios";
 const theme = createTheme();
 
 export default function SignIn() {
+  const { isAuth, token } = useSelector((state) => state.auth);
+  const { userDet } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const [open, setOpen] = React.useState(false);
   const [resetEmail, setResetEmail] = React.useState("");
   const [emailResetError, setEmailResetError] = React.useState(false);
   const [emailResetSuccess, setEmailResetSuccess] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const [verified, setVerified] = React.useState(true);
+
+  const [loginData, setLoginData] = React.useState({
+    email: "",
+    password: "",
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -35,7 +51,11 @@ export default function SignIn() {
   };
 
   const handleClose = () => {
-    console.log(resetEmail)
+    setOpen(false);
+  };
+
+  const handleSendResetLink = () => {
+    setError(false);
     axios
       .post(`${process.env.REACT_APP_SERVER_BASE_URL}/users/forgot-password`, {
         resetEmail,
@@ -46,16 +66,51 @@ export default function SignIn() {
       .catch((e) => {
         setEmailResetError(true);
       });
-    setOpen(false);
+    handleClose();
   };
 
+  const handleChange = (e) => {
+    setVerified(true);
+    setError(false);
+    setEmailResetError(false);
+    setEmailResetSuccess(false);
+    const { name, value } = e.target;
+    setLoginData({
+      ...loginData,
+      [name]: value,
+    });
+  };
+  const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    setLoading(true);
+    axios
+      .post(`${process.env.REACT_APP_SERVER_BASE_URL}/users/signin`, loginData)
+      .then((res) => {
+        if (res.data.emailSent) {
+          setVerified(false);
+          setError(false);
+          setLoading(false);
+        } else {
+          setSuccess(true);
+          setError(false);
+          setVerified(true);
+
+          dispatch(login(res.data.token));
+          dispatch(
+            setUser({ name: res.data.user.firstName, type: res.data.user.type })
+          );
+
+          setLoading(false);
+          setTimeout(() => {
+            navigate("/");
+          }, 1500);
+        }
+      })
+      .catch((e) => {
+        setError(true);
+        setLoading(false);
+      });
   };
 
   return (
@@ -90,6 +145,7 @@ export default function SignIn() {
               id="email"
               label="Email Address"
               name="email"
+              onChange={handleChange}
               autoComplete="email"
               autoFocus
             />
@@ -100,6 +156,7 @@ export default function SignIn() {
               name="password"
               label="Password"
               type="password"
+              onChange={handleChange}
               id="password"
               autoComplete="current-password"
             />
@@ -108,19 +165,29 @@ export default function SignIn() {
               label="Login as a seller/admin"
             />
             <br />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
+
             {emailResetError && (
               <Alert severity="error" sx={{ marginTop: "12px" }}>
                 Please enter a valid email
+              </Alert>
+            )}
+            {error && (
+              <Alert severity="error" sx={{ marginTop: "12px" }}>
+                Please enter a valid email and password
               </Alert>
             )}
             {emailResetSuccess && (
               <Alert sx={{ marginTop: "12px" }}>
                 Password reset link sent, please check your email
               </Alert>
+            )}
+            {!verified && (
+              <Alert severity="warning" sx={{ marginTop: "12px" }}>
+                Account not verified, please verify your email
+              </Alert>
+            )}
+            {success && (
+              <Alert sx={{ marginTop: "12px" }}>Login Successful</Alert>
             )}
             <Button
               type="submit"
@@ -129,7 +196,7 @@ export default function SignIn() {
               sx={{ mt: 3, mb: 2 }}
               id="primaryBgColor"
             >
-              Sign In
+              {loading ? "Signing In..." : "Sign In"}
             </Button>
             <Grid container>
               <Grid item xs>
@@ -170,7 +237,7 @@ export default function SignIn() {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleClose}>Send Reset Link</Button>
+              <Button onClick={handleSendResetLink}>Send Reset Link</Button>
             </DialogActions>
           </Dialog>
         </div>
