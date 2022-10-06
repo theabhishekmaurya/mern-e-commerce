@@ -135,7 +135,7 @@ export default function CustomPaginationActionsTable() {
   };
   const deleteUser = (email) => {
     axios
-      .post(
+      .delete(
         `${process.env.REACT_APP_SERVER_BASE_URL}/admin/delete-user/${email}`
       )
       .then((res) => {

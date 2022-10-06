@@ -2,13 +2,23 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { setActiveProd } from "../Redux/activeProdSlice";
+import { useDispatch } from "react-redux";
 
 export default function HomeTabs() {
   const [value, setValue] = React.useState(0);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    dispatch(setActiveProd(newValue));
+    navigate("/all-products");
+  };
+
+  const handleClick = () => {
+    navigate("/all-products");
   };
 
   let { pathname } = useLocation();
@@ -34,10 +44,10 @@ export default function HomeTabs() {
         sx={{ color: "#424874" }}
         aria-label="scrollable auto tabs example"
       >
-        <Tab label="Buy Shirts" />
-        <Tab label="Buy Jeans" />
-        <Tab label="Buy Shoes" />
-        <Tab label="See all products" />
+        <Tab onClick={handleClick} label="Electronics" />
+        <Tab onClick={handleClick} label="Footwears" />
+        <Tab onClick={handleClick} label="Shirts" />
+        <Tab onClick={handleClick} label="all products" />
       </Tabs>
     </Box>
   );

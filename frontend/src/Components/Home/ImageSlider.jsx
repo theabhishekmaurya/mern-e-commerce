@@ -13,8 +13,7 @@ const ImageSlider = () => {
   return (
     <Box
       // disableGutters
-      // sx={{ padding: "10px 45px" }}
-      padding={{ xs: "5px 0px", md: "10px 45px" }}
+      padding={{ xs: "5px 0px", md: "10px 0px" }}
     >
       <Carousel>
         {images.map((item) => (

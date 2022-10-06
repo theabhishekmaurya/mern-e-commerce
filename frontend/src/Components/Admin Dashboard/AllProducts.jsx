@@ -15,7 +15,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { TableHead } from "@mui/material";
+import { Button, TableHead } from "@mui/material";
 import axios from "axios";
 
 function TablePaginationActions(props) {
@@ -87,8 +87,6 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-
-
 export default function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -117,11 +115,29 @@ export default function CustomPaginationActionsTable() {
     setPage(0);
   };
 
+  const deleteProduct = (id) => {
+    axios
+      .delete(
+        `${process.env.REACT_APP_SERVER_BASE_URL}/admin/delete-product/${id}`
+      )
+      .then((res) => {
+        axios
+          .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-products`)
+          .then((res) => {
+            setProducts(res.data);
+          });
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
+            <TableCell>Image</TableCell>
             <TableCell>Title</TableCell>
             <TableCell align="right">Price</TableCell>
             <TableCell align="right">Category</TableCell>
@@ -138,16 +154,22 @@ export default function CustomPaginationActionsTable() {
           ).map((prod) => (
             <TableRow key={prod.title}>
               <TableCell component="th" scope="row">
+                <img style={{ width:100 }} width="100%" src={prod.image} />
+              </TableCell>
+              <TableCell style={{ width:180 }} component="th" scope="row">
                 {prod.title}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
+              <TableCell  align="right">
                 {prod.price}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
+              <TableCell  align="right">
                 {prod.category}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
+              <TableCell  align="right">
                 {prod.seller}
+              </TableCell>
+              <TableCell  align="right">
+                <Button onClick={() => deleteProduct(prod._id)}>Remove</Button>
               </TableCell>
             </TableRow>
           ))}
