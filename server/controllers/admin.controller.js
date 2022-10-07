@@ -54,10 +54,50 @@ router.post("/add-product", async (req, res) => {
   }
 });
 
+router.get("/product/:id", async (req, res) => {
+  try {
+    const product = await Product.find({ _id: req.params.id });
+    return res.send(product);
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
 router.get("/show-products", async (req, res) => {
   try {
-    const products = await Product.find().lean().exec();
-    return res.send(products);
+    const { sort, filter } = req.query;
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    if (filter === "all") {
+      const products = await Product.find()
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort(sort)
+        .lean()
+        .exec();
+
+      const totalProducts = await Product.find().countDocuments();
+      const pages = Math.ceil(totalProducts / limit);
+      return res.send({ products, pages });
+    } else {
+      const products = await Product.find()
+        .where({
+          category: filter,
+        })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort(sort)
+        .lean()
+        .exec();
+
+      const totalProducts = await Product.find()
+        .where({
+          category: filter,
+        })
+        .countDocuments();
+      const pages = Math.ceil(totalProducts / limit);
+      return res.send({ products, pages });
+    }
   } catch (error) {
     res.send(error.message);
   }

@@ -2,12 +2,18 @@ import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 
+import { useNavigate } from "react-router-dom";
+
 const ProdItem = ({ item }) => {
-  const { image, price, title } = item;
+  const { image, price, title, _id } = item;
+  const navigate = useNavigate();
   return (
-    <Box height={{xs:"350px",sm:"400px"}} 
-    width={{xs:"100%", md:"100%"}} 
-    border="1px solid"
+    <Box
+      height={{ xs: "380px", sm: "400px" }}
+      width={{ xs: "100%", md: "100%" }}
+      className="prodItem"
+      p="5px"
+      onClick={() => navigate(`/product/${_id}`)}
     >
       <img height="70%" width="100%" src={image} />
       <Typography className="textOverflow" m="15px 5px" variant="h6" mb="5px">

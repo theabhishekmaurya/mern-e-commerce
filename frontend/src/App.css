@@ -48,3 +48,15 @@ body {
   overflow: hidden;
   white-space: nowrap;
 }
+
+.prodItem {
+  border-radius: 5px;
+  transition: all 0.5s ease;
+  background-color: #f6f6f8;
+
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.prodItem:hover {
+  cursor: pointer;
+  transform: scale(1.01);
+}

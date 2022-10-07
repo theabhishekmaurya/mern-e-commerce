@@ -3,13 +3,18 @@ import React from "react";
 import ProdFilter from "./ProdFilter";
 import ProdItem from "./ProdItem";
 
-const ProdGrid = ({ prod }) => {
+const ProdGrid = ({ prod, setFilter, setSort, filter, sort }) => {
   return (
     <Box width={{ xs: "90%", sm: "90%", xl: "85%" }}>
-        <ProdFilter/>
+      <ProdFilter
+        filter={filter}
+        setFilter={setFilter}
+        sort={sort}
+        setSort={setSort}
+      />
       <Grid container spacing={{ xs: 3, md: 3, xl: 14 }}>
         {prod.map((prod) => (
-          <Grid item xs={6} sm={4} md={3} >
+          <Grid key={prod._id} item xs={6} sm={4} md={3}>
             <ProdItem item={prod} />
           </Grid>
         ))}

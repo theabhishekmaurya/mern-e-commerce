@@ -95,7 +95,7 @@ export default function CustomPaginationActionsTable() {
     axios
       .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-products`)
       .then((res) => {
-        setProducts(res.data);
+        setProducts(res.data.products);
       })
       .catch((e) => {
         console.log(e.message);

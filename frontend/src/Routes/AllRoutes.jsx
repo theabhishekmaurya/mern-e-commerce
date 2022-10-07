@@ -7,9 +7,10 @@ import Error from "../Components/Pages/Error";
 import Dashboard from "../Components/Admin Dashboard/Dashboard";
 import VerifyEmail from "../Components/LogIn/VerifyEmail";
 import PasswordReset from "../Components/LogIn/PasswordReset";
-import Cart from "../Components/User/Cart"
-import Wishlist from "../Components/User/Wishlist"
+import Cart from "../Components/User/Cart";
+import Wishlist from "../Components/User/Wishlist";
 import ProductHome from "../Components/Product Page/ProductHome";
+import { ProdDetails } from "../Components/Product Details/ProdDetails";
 
 const AllRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AllRoutes = () => {
       <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/all-products" element={<ProductHome />} />
+      <Route path="/product/:id" element={<ProdDetails />} />
       <Route path="/users/:userId/verify/:token" element={<VerifyEmail />} />
       <Route
         path="/users/:userId/forgot-password/:token"
