@@ -17,6 +17,7 @@ import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./Redux/authSlice";
+import { setCart } from "./Redux/cartSlice";
 import BecomeSeller from "./User/BecomeSeller";
 
 const Search = styled("div")(({ theme }) => ({
@@ -62,6 +63,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
   const { isAuth } = useSelector((state) => state.auth);
   const { userDet } = useSelector((state) => state.user);
+  const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -89,6 +91,7 @@ export default function PrimarySearchAppBar() {
   };
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(setCart([]));
     handleMenuClose();
   };
 
@@ -138,8 +141,8 @@ export default function PrimarySearchAppBar() {
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
-
   const { pathname } = useLocation();
+
   return (
     <Box
       sx={{ flexGrow: 1 }}
@@ -211,11 +214,10 @@ export default function PrimarySearchAppBar() {
             </IconButton>
             <IconButton
               size="large"
-              aria-label="show 17 new notifications"
               color="inherit"
               onClick={() => handleRightMenu("cart")}
             >
-              <Badge badgeContent={4} color="secondary">
+              <Badge badgeContent={cartItems.length} color="secondary">
                 <ShoppingCartRoundedIcon />
               </Badge>
             </IconButton>

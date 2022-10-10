@@ -39,10 +39,10 @@ export default function SignUp() {
       [name]: value,
     });
   };
-
+  const { firstName, email, password } = userData;
   const handleSubmit = (event) => {
     event.preventDefault();
-    const { firstName, email, password } = userData;
+
     setEmailMsg("");
     setLoading(true);
     if (!firstName || !email || !password) {
@@ -64,7 +64,7 @@ export default function SignUp() {
             setLoading(false);
             return;
           }
-          
+
           setLoading(false);
           setSuccess(true);
           setUserData({
@@ -180,6 +180,7 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               id="primaryBgColor"
+              disabled={!firstName || !email || !password}
             >
               {loading ? "Signing up..." : "Sign up"}
             </Button>

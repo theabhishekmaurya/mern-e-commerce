@@ -12,7 +12,7 @@ const ProdItem = ({ item }) => {
       height={{ xs: "380px", sm: "400px" }}
       width={{ xs: "100%", md: "100%" }}
       className="prodItem"
-      p="5px"
+      p="6px"
       onClick={() => navigate(`/product/${_id}`)}
     >
       <img height="70%" width="100%" src={image} />
@@ -21,7 +21,9 @@ const ProdItem = ({ item }) => {
       </Typography>
 
       <Typography fontSize={19} m="0px 5px" className="link">
-        <b>Rs.</b> {price}
+        <b>Rs.</b> {new Intl.NumberFormat("en-IN", { maximumSignificantDigits: 3 }).format(
+          price
+        )}
       </Typography>
     </Box>
   );

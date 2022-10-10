@@ -22,6 +22,7 @@ import { Alert } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../Redux/authSlice";
 import { setUser } from "../Redux/userSlice";
+import { setCart } from "../Redux/cartSlice";
 import axios from "axios";
 const theme = createTheme();
 
@@ -92,10 +93,11 @@ export default function SignIn() {
           setError(false);
           setLoading(false);
         } else {
-          setSuccess(true);
+          console.log(res.data)
           setError(false);
+          setSuccess(true);
           setVerified(true);
-
+          dispatch(setCart(res.data.cart.cartItems));
           dispatch(login(res.data.token));
           dispatch(
             setUser({ name: res.data.user.firstName, type: res.data.user.type })
@@ -195,6 +197,7 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               id="primaryBgColor"
+              disabled={!loginData.email || !loginData.password}
             >
               {loading ? "Signing In..." : "Sign In"}
             </Button>

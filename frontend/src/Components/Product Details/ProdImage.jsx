@@ -3,8 +3,12 @@ import React from "react";
 
 const ProdImage = ({ image }) => {
   return (
-    <Box width="50%" border="1px solid" display="flex" justifyContent="center">
-      <img width="50%" src={image} />
+    <Box
+      width={{ xs: "100%", sm: "50%" }}
+      display="flex"
+      justifyContent="center"
+    >
+      <img width={{ xs: "100%", sm: "50%" }} src={image} />
     </Box>
   );
 };

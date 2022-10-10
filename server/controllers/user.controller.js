@@ -5,6 +5,7 @@ const sendEmail = require("../utils/sendmail");
 const bcrypt = require("bcryptjs");
 const Token = require("../models/token.model");
 const User = require("../models/user.model");
+const Cart = require("../models/cart.model");
 const verifyToken = require("../utils/verifyToken");
 const router = express.Router();
 
@@ -94,12 +95,19 @@ router.post("/signin", async (req, res) => {
       }
       const message =
         "Click on this one time link to verify your email :" + url;
-      console.log(url);
+
       sendEmail(user.email, "Verify Email", message);
+
       return res.send({ emailSent: "Verification mail sent" });
     } else {
       let token = newToken(user);
-      return res.send({ token, user });
+      const cart = await Cart.find({ userId: user._id }).populate('cartItems.product')
+
+      return res.send({
+        token,
+        user,
+        cart: cart.length > 0 ? cart[0] : { cartItems: [] },
+      });
     }
   } catch (e) {
     res.send(e.message);
