@@ -4,9 +4,20 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CartDetails from "./CartDetails";
 import CartItem from "./CartItem";
+import { useNavigate,} from "react-router-dom";
 
 const Cart = () => {
   const { cartItems } = useSelector((state) => state.cart);
+  let total = 0;
+  for (let i = 0; i < cartItems.length; i++) {
+    total += cartItems[i].product.price * cartItems[i].quantity;
+  }
+
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    navigate("/cart/address");
+  };
   return (
     <Stack
       margin={{ xs: "20px ", md: "20px 40px", xl: "20px 100px" }}
@@ -14,7 +25,7 @@ const Cart = () => {
       spacing={2}
     >
       <Stack
-        width={{ xs: "100%", xl: "50%" }}
+        width={{ xs: "100%", md: "120%", xl: "60%" }}
         margin={{ xs: "none", xl: "0 30px" }}
         height="500px"
         overflow="scroll"
@@ -26,7 +37,7 @@ const Cart = () => {
         ))}
       </Stack>
       <Box width={{ xs: "100%", xl: "50%" }}>
-        <CartDetails cartItems={cartItems} />
+        <CartDetails total={total} cartItems={cartItems} />
         <Box
           width={{ xs: "100%", md: "80%", xl: "60%" }}
           display="flex"
@@ -37,6 +48,7 @@ const Cart = () => {
             size="large"
             variant="contained"
             id="primaryBgColor"
+            onClick={handleCheckout}
           >
             Checkout
           </Button>

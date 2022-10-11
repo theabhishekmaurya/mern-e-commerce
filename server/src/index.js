@@ -4,6 +4,7 @@ const cors = require("cors");
 const userController = require("../controllers/user.controller");
 const adminController = require("../controllers/admin.controller");
 const cartController = require("../controllers/cart.controller");
+const addressController = require("../controllers/address.controller");
 const connect = require("../configs/db");
 
 const PORT = process.env.port || 5000;
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/users", userController);
 app.use("/admin", adminController);
 app.use("/cart", cartController);
+app.use("/address", addressController);
 
 app.listen(PORT, async () => {
   try {

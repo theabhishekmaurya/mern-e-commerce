@@ -83,4 +83,22 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//delete a product from cart
+router.delete("/:id", async (req, res) => {
+  try {
+    const token = req.headers.token;
+    const user = await verifyToken(token);
+    const { _id } = user.user;
+    let cart = await Cart.findOne({ userId: _id });
+    const updatedCart = cart.cartItems.filter(
+      (item) => item.product != req.params.id
+    );
+
+    await Cart.updateOne({ userId: _id }, { cartItems: updatedCart });
+    return res.send({ msg: "removed" });
+  } catch (error) {
+    return res.send(error.message);
+  }
+});
+
 module.exports = router;

@@ -3,14 +3,16 @@ import { Stack } from "@mui/system";
 import React, { useState } from "react";
 import ShoppingCartRounded from "@mui/icons-material/ShoppingCartRounded";
 import { useDispatch, useSelector } from "react-redux";
-import { setCart } from "../Redux/cartSlice";
+import { setCart, setCartTotal } from "../Redux/cartSlice";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const ProductDetails = ({ prod, exists }) => {
   const { token } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const { price, seller, title, category, _id } = prod;
+
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
 
@@ -42,9 +44,13 @@ const ProductDetails = ({ prod, exists }) => {
         }
       )
       .then((res) => {
-        console.log(res.data.updatedCart);
-        dispatch(setCart(res.data.updatedCart));
+        dispatch(setCart([...cartItems, { product: prod, quantity }]));
       });
+  };
+
+  const handleBuyNow = () => {
+    dispatch(setCartTotal(prod.price * quantity));
+    navigate("/product/address");
   };
   return (
     <Stack
@@ -88,7 +94,12 @@ const ProductDetails = ({ prod, exists }) => {
             <ShoppingCartRounded fontSize="small" />
           </span>
         </Button>
-        <Button size="large" id="primaryBgColor" variant="contained">
+        <Button
+          size="large"
+          id="primaryBgColor"
+          variant="contained"
+          onClick={handleBuyNow}
+        >
           Buy Now
         </Button>
       </Stack>
