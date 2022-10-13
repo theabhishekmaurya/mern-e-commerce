@@ -17,12 +17,14 @@ root.render(
   <>
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <BrowserRouter>
-          <Navbar />
-          <HomeTabs />
-          <App />
-          <Footer />
-        </BrowserRouter>
+        
+          <BrowserRouter>
+            <Navbar />
+            <HomeTabs />
+            <App />
+            <Footer />
+          </BrowserRouter>
+        
       </PersistGate>
     </Provider>
   </>

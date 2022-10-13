@@ -12,6 +12,7 @@ import Wishlist from "../Components/User/Wishlist";
 import ProductHome from "../Components/Product Page/ProductHome";
 import { ProdDetails } from "../Components/Product Details/ProdDetails";
 import ChooseAddress from "../Components/User/ChooseAddress";
+import MyAccount from "../Components/User/MyAccount";
 
 const AllRoutes = () => {
   return (
@@ -24,6 +25,7 @@ const AllRoutes = () => {
       <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/all-products" element={<ProductHome />} />
+      <Route path="/my-account" element={<MyAccount />} />
       <Route path=":coming_from/address" element={<ChooseAddress />} />
       <Route path="/product/:id" element={<ProdDetails />} />
       <Route path="/users/:userId/verify/:token" element={<VerifyEmail />} />

@@ -1,16 +1,29 @@
 import { Radio } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
-const SelectAddress = ({ addresses, setSelected }) => {
+const UserAddresses = () => {
+  const [addresses, setAddresses] = useState([]);
+  const { token } = useSelector((state) => state.auth);
+  React.useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_SERVER_BASE_URL}/address`, {
+        headers: { token },
+      })
+      .then((res) => {
+        setAddresses(res.data);
+      });
+  }, []);
   return (
     <Box
       borderRadius="5px"
-      height="220px"
       overflow="scroll"
+      maxHeight={300}
       boxShadow="rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px"
       p={3}
     >
@@ -18,7 +31,7 @@ const SelectAddress = ({ addresses, setSelected }) => {
         <RadioGroup
           name="address-radio"
           onChange={(e) => {
-            setSelected(e.target.value);
+            // setSelected(e.target.value);
           }}
         >
           {addresses.map((elem) => (
@@ -30,14 +43,16 @@ const SelectAddress = ({ addresses, setSelected }) => {
               >
                 <FormControlLabel
                   value={elem._id}
-                  control={<Radio size="small" />}
+                  control={<Radio size="small" disabled/>}
                 />
               </Box>
               <Box>
-                <h6 style={{ margin: 0 }}>{elem.firstName}</h6>
+                <h6 style={{ margin: 0 }}>
+                  {elem.firstName} {elem.lastName}
+                </h6>
                 <p style={{ margin: 0 }}>{elem.addLine1}</p>
                 <p>
-                  {elem.city}, {elem.state}
+                  {elem.city}, {elem.state}, {elem.country}
                 </p>
               </Box>
             </Stack>
@@ -48,4 +63,4 @@ const SelectAddress = ({ addresses, setSelected }) => {
   );
 };
 
-export default SelectAddress;
+export default UserAddresses;

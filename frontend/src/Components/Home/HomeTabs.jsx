@@ -47,9 +47,10 @@ export default function HomeTabs() {
   return (
     <Box
       display={
-        pathname == "/signin" ||
+        pathname === "/signin" ||
         pathname.startsWith("/users") ||
-        pathname == "/signup"
+        pathname == "/my-account" ||
+        pathname === "/signup"
           ? "none"
           : "flex"
       }

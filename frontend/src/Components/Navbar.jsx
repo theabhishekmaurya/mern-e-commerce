@@ -104,6 +104,11 @@ export default function PrimarySearchAppBar() {
     }
   };
 
+  const handleMyAccount=()=>{
+    handleMenuClose();
+    navigate("/my-account")
+  }
+
   const handleRightMenu = (menu) => {
     if (!isAuth) return;
 
@@ -132,7 +137,7 @@ export default function PrimarySearchAppBar() {
       sx={{ marginTop: "30px" }}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMyAccount}>My account</MenuItem>
       <MenuItem onClick={handleBecomeSeller}>
         {userDet.type === "seller" || userDet.type === "admin"
           ? "Admin Dashboard"
