@@ -12,13 +12,15 @@ import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
-import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import StoreRoundedIcon from "@mui/icons-material/StoreRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./Redux/authSlice";
 import { setCart } from "./Redux/cartSlice";
 import BecomeSeller from "./User/BecomeSeller";
+
+import logo from "../assets/logo.png";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -104,10 +106,10 @@ export default function PrimarySearchAppBar() {
     }
   };
 
-  const handleMyAccount=()=>{
+  const handleMyAccount = () => {
     handleMenuClose();
-    navigate("/my-account")
-  }
+    navigate("/my-account");
+  };
 
   const handleRightMenu = (menu) => {
     if (!isAuth) return;
@@ -171,8 +173,9 @@ export default function PrimarySearchAppBar() {
             aria-label="open drawer"
             sx={{ mr: 2 }}
           >
-            <AddBusinessIcon />
+            <StoreRoundedIcon />
           </IconButton>
+
           <Typography
             onClick={redirectToHome}
             variant="h6"
@@ -181,7 +184,7 @@ export default function PrimarySearchAppBar() {
             className="storeName"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
-            My Store
+            MERN E-SHOP{" "}
           </Typography>
 
           <Search>

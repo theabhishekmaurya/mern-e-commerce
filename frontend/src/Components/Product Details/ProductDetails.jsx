@@ -50,7 +50,7 @@ const ProductDetails = ({ prod, exists }) => {
 
   const handleBuyNow = () => {
     dispatch(setCartTotal(prod.price * quantity));
-    navigate("/product/address");
+    navigate(`/product/${_id}_${quantity}/address`);
   };
   return (
     <Stack

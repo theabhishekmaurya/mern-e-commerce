@@ -4,7 +4,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CartDetails from "./CartDetails";
 import CartItem from "./CartItem";
-import { useNavigate,} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { cartItems } = useSelector((state) => state.cart);
@@ -16,7 +16,7 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const handleCheckout = () => {
-    navigate("/cart/address");
+    navigate("/cart/all/address");
   };
   return (
     <Stack
@@ -30,11 +30,19 @@ const Cart = () => {
         height="500px"
         overflow="scroll"
         borderRadius="5px"
+        justifyContent={cartItems.length == 0 ? "center" : ""}
+        alignItems={cartItems.length == 0 ? "center" : ""}
         boxShadow="rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px"
       >
         {cartItems.map((prod) => (
           <CartItem prod={prod.product} qty={prod.quantity} />
         ))}
+        {cartItems.length === 0 && (
+          <img
+            width="50%"
+            src="https://img.freepik.com/free-vector/empty-concept-illustration_114360-1233.jpg?size=338&ext=jpg"
+          />
+        )}
       </Stack>
       <Box width={{ xs: "100%", xl: "50%" }}>
         <CartDetails total={total} cartItems={cartItems} />

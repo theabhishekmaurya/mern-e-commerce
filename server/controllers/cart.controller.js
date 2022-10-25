@@ -101,4 +101,16 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.delete("", async (req, res) => {
+  try {
+    const token = req.headers.token;
+    const user = await verifyToken(token);
+    const { _id } = user.user;
+    let cart = await Cart.deleteOne({ userId: _id });
+    return res.send({ msg: "removed" });
+  } catch (error) {
+    return res.send(error.message);
+  }
+});
+
 module.exports = router;
