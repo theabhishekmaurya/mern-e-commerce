@@ -22,6 +22,36 @@ router.get("", async (req, res) => {
   }
 });
 
+//get a user
+router.get("/user", async (req, res) => {
+  try {
+    const { token } = req.headers;
+    const { user } = await verifyToken(token);
+    // console.log(user);
+    return res.send(user);
+  } catch (error) {
+    return res.send(error.message);
+  }
+});
+
+//update a user
+router.patch("/user", async (req, res) => {
+  try {
+    const { token } = req.headers;
+    const { user } = await verifyToken(token);
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: user._id },
+      req.body,
+      { new: true }
+    );
+    const nToken = newToken(updatedUser);
+
+    return res.send({ token: nToken, user: updatedUser });
+  } catch (error) {
+    return res.send(error.message);
+  }
+});
+
 //add a new user
 router.post(
   "/signup",
@@ -101,7 +131,9 @@ router.post("/signin", async (req, res) => {
       return res.send({ emailSent: "Verification mail sent" });
     } else {
       let token = newToken(user);
-      const cart = await Cart.find({ userId: user._id }).populate('cartItems.product')
+      const cart = await Cart.find({ userId: user._id }).populate(
+        "cartItems.product"
+      );
 
       return res.send({
         token,

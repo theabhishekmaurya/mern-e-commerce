@@ -103,6 +103,11 @@ router.get("/show-products", async (req, res) => {
   }
 });
 
+router.get("/all-products", async (req, res) => {
+  const products = await Product.find();
+  return res.send(products);
+});
+
 router.get("/show-users", async (req, res) => {
   try {
     const users = await User.find().lean().exec();

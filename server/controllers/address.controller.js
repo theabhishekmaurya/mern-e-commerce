@@ -5,9 +5,9 @@ const verifyToken = require("../utils/verifyToken");
 
 router.get("", async (req, res) => {
   try {
-    const user = await verifyToken(req.headers.token);
-    const address = await Address.findOne({ userId: user.user._id });
-    res.send(address ? address.addresses : []);
+    const { user } = await verifyToken(req.headers.token);
+    const address = await Address.find({ userId: user._id });
+    res.send(address ? address : []);
   } catch (error) {
     return res.send(error.message);
   }
@@ -15,21 +15,9 @@ router.get("", async (req, res) => {
 
 router.post("", async (req, res) => {
   try {
-    const user = await verifyToken(req.headers.token);
-    const address = await Address.findOne({ userId: user.user._id });
-    if (address) {
-      await Address.updateOne(
-        { userId: user.user._id },
-        {
-          addresses: [...address.addresses, req.body],
-        }
-      );
-    } else {
-      await Address.create({
-        userId: user.user._id,
-        addresses: [req.body],
-      });
-    }
+    const { user } = await verifyToken(req.headers.token);
+    req.body.userId = user._id;
+    await Address.create(req.body);
     res.send({ msg: "address added" });
   } catch (error) {
     return res.send(error.message);

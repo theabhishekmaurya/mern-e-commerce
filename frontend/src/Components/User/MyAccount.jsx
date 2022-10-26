@@ -13,7 +13,7 @@ const MyAccount = () => {
   };
   return (
     <Box padding="5px 20px">
-      <Stack border="1px solid">
+      <Stack>
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
           <Tabs value={value} onChange={handleChange} centered>
             <Tab label="My Profile" />

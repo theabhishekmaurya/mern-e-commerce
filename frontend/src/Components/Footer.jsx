@@ -25,7 +25,8 @@ const Footer = () => {
         pathname == "/signin" ||
         pathname == "/signup" ||
         pathname.startsWith("/dashboard") ||
-        pathname.startsWith("/users")
+        pathname.startsWith("/users") ||
+        pathname.startsWith("/my-account")
           ? "none"
           : { xs: "none", sm: "block" }
       }
@@ -57,12 +58,16 @@ const Footer = () => {
           <Box gap={8} display="flex">
             <Stack>
               {usefulLinks.map((item, index) => (
-                <Typography key={item+index} paragaraph>{item}</Typography>
+                <Typography key={item + index} paragaraph>
+                  {item}
+                </Typography>
               ))}
             </Stack>
             <Stack>
               {usefulLinks.map((item, index) => (
-                <Typography key={item+index} paragaraph>{item}</Typography>
+                <Typography key={item + index} paragaraph>
+                  {item}
+                </Typography>
               ))}
             </Stack>
           </Box>

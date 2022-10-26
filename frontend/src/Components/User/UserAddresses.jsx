@@ -10,20 +10,23 @@ import { useSelector } from "react-redux";
 const UserAddresses = () => {
   const [addresses, setAddresses] = useState([]);
   const { token } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
   React.useEffect(() => {
+    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_SERVER_BASE_URL}/address`, {
         headers: { token },
       })
       .then((res) => {
         setAddresses(res.data);
+        setLoading(false);
       });
   }, []);
   return (
     <Box
       borderRadius="5px"
       overflow="scroll"
-      maxHeight={300}
+      maxHeight={800}
       boxShadow="rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px"
       p={3}
     >
@@ -34,6 +37,8 @@ const UserAddresses = () => {
             // setSelected(e.target.value);
           }}
         >
+          {loading && <h6>Loading Adresses ...</h6>}
+          {addresses.length === 0 && !loading && <h6>No address added</h6>}
           {addresses.map((elem) => (
             <Stack direction="row">
               <Box
@@ -43,7 +48,7 @@ const UserAddresses = () => {
               >
                 <FormControlLabel
                   value={elem._id}
-                  control={<Radio size="small" disabled/>}
+                  control={<Radio size="small" disabled />}
                 />
               </Box>
               <Box>

@@ -13,7 +13,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 import StoreRoundedIcon from "@mui/icons-material/StoreRounded";
-import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./Redux/authSlice";
@@ -95,6 +94,7 @@ export default function PrimarySearchAppBar() {
     dispatch(logout());
     dispatch(setCart([]));
     handleMenuClose();
+    navigate("/signin");
   };
 
   const handleBecomeSeller = () => {
@@ -210,7 +210,7 @@ export default function PrimarySearchAppBar() {
               <Typography>{!isAuth ? "Login" : userDet.name}</Typography>
               <KeyboardArrowDownRoundedIcon />
             </IconButton>
-            <IconButton
+            {/* <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
@@ -219,7 +219,7 @@ export default function PrimarySearchAppBar() {
               <Badge badgeContent={4} color="secondary">
                 <FavoriteRoundedIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               size="large"
               color="inherit"

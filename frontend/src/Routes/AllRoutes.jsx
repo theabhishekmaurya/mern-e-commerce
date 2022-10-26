@@ -8,7 +8,6 @@ import Dashboard from "../Components/Admin Dashboard/Dashboard";
 import VerifyEmail from "../Components/LogIn/VerifyEmail";
 import PasswordReset from "../Components/LogIn/PasswordReset";
 import Cart from "../Components/User/Cart";
-import Wishlist from "../Components/User/Wishlist";
 import ProductHome from "../Components/Product Page/ProductHome";
 import { ProdDetails } from "../Components/Product Details/ProdDetails";
 import ChooseAddress from "../Components/User/ChooseAddress";
@@ -23,7 +22,7 @@ const AllRoutes = () => {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/wishlist" element={<Wishlist />} />
+
       <Route path="/cart" element={<Cart />} />
       <Route path="/all-products" element={<ProductHome />} />
       <Route path="/my-account" element={<MyAccount />} />

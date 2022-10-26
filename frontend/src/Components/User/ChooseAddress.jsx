@@ -26,6 +26,7 @@ const ChooseAddress = () => {
         headers: { token },
       })
       .then((res) => {
+        console.log("here", res.data);
         setAddresses(res.data);
       });
   }, []);

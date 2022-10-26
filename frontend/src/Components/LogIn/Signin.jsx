@@ -93,7 +93,6 @@ export default function SignIn() {
           setError(false);
           setLoading(false);
         } else {
-          console.log(res.data)
           setError(false);
           setSuccess(true);
           setVerified(true);

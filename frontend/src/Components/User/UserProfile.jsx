@@ -8,21 +8,86 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import { login } from "../Redux/authSlice";
 
 const theme = createTheme();
 
 export default function SignUp() {
   const [upload, setUpload] = React.useState(false);
+  const [update, setUpdate] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [imageSelected, setImageSelected] = React.useState("");
+  const [data, setData] = React.useState({});
+  const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    setUpdate(true);
+    axios
+      .patch(`${process.env.REACT_APP_SERVER_BASE_URL}/users/user`, data, {
+        headers: { token },
+      })
+      .then((response) => {
+        dispatch(login(response.data.token));
+        setData(response.data.user);
+        setUpdate(false);
+      });
   };
 
+  const handleChange = (e) => {
+    let type = e.target.type;
+    if (type == "file") {
+      setImageSelected(e.target.files[0]);
+    }
+  };
+
+  const handleChangeData = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  const handleUpload = async () => {
+    if (!imageSelected) return;
+    setUpload(true);
+    const formData = new FormData();
+    formData.append("file", imageSelected);
+    formData.append("upload_preset", "myecommerce");
+
+    axios
+      .post("https://api.cloudinary.com/v1_1/dgelxfhx7/image/upload", formData)
+      .then((res) => {
+        axios
+          .patch(
+            `${process.env.REACT_APP_SERVER_BASE_URL}/users/user`,
+            { profilePic: res.data.url },
+            {
+              headers: { token },
+            }
+          )
+          .then((response) => {
+            dispatch(login(response.data.token));
+            setUpload(false);
+          });
+      });
+  };
+
+  React.useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`${process.env.REACT_APP_SERVER_BASE_URL}/users/user`, {
+        headers: { token },
+      })
+      .then((res) => {
+        setData(res.data);
+        setLoading(false);
+      });
+  }, [token]);
+  if (loading) {
+    return <h2>Loading Profile ...</h2>;
+  }
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -39,30 +104,29 @@ export default function SignUp() {
             sx={{
               m: 1,
               bgcolor: "secondary.main",
-              width: "100px",
-              height: "100px",
+              width: "150px",
+              height: "150px",
             }}
-            src="https://static.remove.bg/remove-bg-web/bf2ec228bc55da2aaa8a6978c6fe13e205c3849c/assets/start_remove-c851bdf8d3127a24e2d137a55b1b427378cd17385b01aec6e59d5d4b5f39d2ec.png"
+            src={data?.profilePic}
           ></Avatar>
-          <Button
-
-          // onClick={handleUpload}
-          >
-            {upload ? "Uploading..." : "Upload a new image"}
-          </Button>
-          <IconButton
-            color="primary"
-            aria-label="upload picture"
-            component="label"
-          >
-            <input
-              hidden
-              accept="image/*"
-              //   onChange={handleChange}
-              type="file"
-            />
-            {/* <PhotoCamera sx={{ color: "#424874" }} /> */}
-          </IconButton>
+          <Box>
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="label"
+            >
+              <input
+                hidden
+                accept="image/*"
+                onChange={handleChange}
+                type="file"
+              />
+              <AddAPhotoIcon sx={{ color: "#424874" }} />
+            </IconButton>
+            <Button onClick={handleUpload}>
+              {upload && imageSelected ? "Uploading..." : "Upload Image"}
+            </Button>
+          </Box>
           <Box
             component="form"
             noValidate
@@ -76,7 +140,8 @@ export default function SignUp() {
                   name="firstName"
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  onChange={handleChangeData}
+                  value={data?.firstName}
                   autoFocus
                 />
               </Grid>
@@ -84,8 +149,9 @@ export default function SignUp() {
                 <TextField
                   fullWidth
                   id="lastName"
-                  label="Last Name"
                   name="lastName"
+                  value={data?.lastName}
+                  onChange={handleChangeData}
                   autoComplete="family-name"
                 />
               </Grid>
@@ -93,17 +159,29 @@ export default function SignUp() {
                 <TextField
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  value={data?.email}
                   name="email"
+                  onChange={handleChangeData}
                   autoComplete="email"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
+                  id="mobile"
+                  onChange={handleChangeData}
+                  type="Number"
+                  value={data?.mobile}
+                  label={!data?.mobile && "Mobile"}
+                  name="mobile"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
                   disabled
-                  name="password"
-                  value="User Type: Seller"
+                  name="type"
+                  value={`User Type: ${data.type}`}
                 />
               </Grid>
             </Grid>
@@ -114,7 +192,7 @@ export default function SignUp() {
               id="primaryBgColor"
               sx={{ mt: 3, mb: 2 }}
             >
-              Update Profile
+              {update ? "Updating..." : "Update profile"}
             </Button>
           </Box>
         </Box>

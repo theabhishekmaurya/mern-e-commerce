@@ -46,4 +46,13 @@ router.get("/success/:orderId", async (req, res) => {
   }
 });
 
+router.get("/get-order", async (req, res) => {
+  const { user } = await verifyToken(req.headers.token);
+  const orders = await Order.find({ userId: user._id })
+    .populate("address")
+    .populate("items.product");
+
+  return res.send(orders ? orders : []);
+});
+
 module.exports = router;

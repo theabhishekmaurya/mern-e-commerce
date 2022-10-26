@@ -88,14 +88,14 @@ TablePaginationActions.propTypes = {
 };
 
 export default function CustomPaginationActionsTable() {
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [products, setProducts] = React.useState([]);
   React.useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-products`)
+      .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/all-products`)
       .then((res) => {
-        setProducts(res.data.products);
+        setProducts(res.data);
       })
       .catch((e) => {
         console.log(e.message);
@@ -154,21 +154,15 @@ export default function CustomPaginationActionsTable() {
           ).map((prod) => (
             <TableRow key={prod.title}>
               <TableCell component="th" scope="row">
-                <img style={{ width:100 }} width="100%" src={prod.image} />
+                <img style={{ width: 100 }} width="100%" src={prod.image} />
               </TableCell>
-              <TableCell style={{ width:180 }} component="th" scope="row">
+              <TableCell style={{ width: 180 }} component="th" scope="row">
                 {prod.title}
               </TableCell>
-              <TableCell  align="right">
-                {prod.price}
-              </TableCell>
-              <TableCell  align="right">
-                {prod.category}
-              </TableCell>
-              <TableCell  align="right">
-                {prod.seller}
-              </TableCell>
-              <TableCell  align="right">
+              <TableCell align="right">{prod.price}</TableCell>
+              <TableCell align="right">{prod.category}</TableCell>
+              <TableCell align="right">{prod.seller}</TableCell>
+              <TableCell align="right">
                 <Button onClick={() => deleteProduct(prod._id)}>Remove</Button>
               </TableCell>
             </TableRow>
