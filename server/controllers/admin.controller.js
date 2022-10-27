@@ -108,6 +108,18 @@ router.get("/all-products", async (req, res) => {
   return res.send(products);
 });
 
+router.get("/prod/:search", async (req, res) => {
+  const term = req.params.search;
+  const products = await Product.find();
+  const prod = products.filter(
+    (item) =>
+      item.title.toLowerCase().includes(term.toLowerCase()) ||
+      item.category.toLowerCase().includes(term.toLowerCase())
+  );
+
+  return res.send(prod);
+});
+
 router.get("/show-users", async (req, res) => {
   try {
     const users = await User.find().lean().exec();

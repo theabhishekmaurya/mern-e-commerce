@@ -12,7 +12,7 @@ const MyAccount = () => {
     setValue(newValue);
   };
   return (
-    <Box padding="5px 20px">
+    <Box padding="5px 20px" mb={5}>
       <Stack>
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
           <Tabs value={value} onChange={handleChange} centered>

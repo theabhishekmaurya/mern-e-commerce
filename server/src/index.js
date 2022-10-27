@@ -16,6 +16,7 @@ app.use(
     origin: "*",
   })
 );
+
 app.use(express.json());
 app.use("/users", userController);
 app.use("/admin", adminController);

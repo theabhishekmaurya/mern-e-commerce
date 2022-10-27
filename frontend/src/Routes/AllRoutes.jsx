@@ -13,6 +13,7 @@ import { ProdDetails } from "../Components/Product Details/ProdDetails";
 import ChooseAddress from "../Components/User/ChooseAddress";
 import MyAccount from "../Components/User/MyAccount";
 import PaymentSuccess from "../Components/User/PaymentSuccess";
+import PrivateRoute from "./PrivateRoute";
 
 const AllRoutes = () => {
   return (
@@ -21,12 +22,40 @@ const AllRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signin" element={<SignIn />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/cart" element={<Cart />} />
+      <Route
+        path="/cart"
+        element={
+          <PrivateRoute>
+            <Cart />
+          </PrivateRoute>
+        }
+      />
       <Route path="/all-products" element={<ProductHome />} />
-      <Route path="/my-account" element={<MyAccount />} />
-      <Route path=":coming_from/:prodId/address" element={<ChooseAddress />} />
+      <Route
+        path="/my-account"
+        element={
+          <PrivateRoute>
+            <MyAccount />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path=":coming_from/:prodId/address"
+        element={
+          <PrivateRoute>
+            <ChooseAddress />
+          </PrivateRoute>
+        }
+      />
       <Route path="/product/:id" element={<ProdDetails />} />
       <Route path="/order-success/:orderId" element={<PaymentSuccess />} />
       <Route path="/users/:userId/verify/:token" element={<VerifyEmail />} />

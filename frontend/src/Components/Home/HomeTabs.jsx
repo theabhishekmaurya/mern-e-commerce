@@ -50,7 +50,8 @@ export default function HomeTabs() {
         pathname === "/signin" ||
         pathname.startsWith("/users") ||
         pathname == "/my-account" ||
-        pathname === "/signup"
+        pathname === "/signup" ||
+        pathname === "/dashboard"
           ? "none"
           : "flex"
       }

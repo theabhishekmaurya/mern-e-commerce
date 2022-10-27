@@ -25,7 +25,7 @@ export const ProdDetails = () => {
             setProdExists(res.data.exists);
           });
       });
-  }, [cartItems]);
+  }, [cartItems, id]);
 
   return (
     <Stack

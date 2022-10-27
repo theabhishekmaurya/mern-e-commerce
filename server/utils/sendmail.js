@@ -17,7 +17,7 @@ module.exports = function (email, subject, message) {
   });
 
   let mailDetails = {
-    from: "abhiayodhya1802@gmail.com",
+    from: "eshopmern@gmail.com",
     to: email,
     subject: subject,
     text: message,

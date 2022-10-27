@@ -8,7 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const ProductDetails = ({ prod, exists }) => {
-  const { token } = useSelector((state) => state.auth);
+  const { token, isAuth } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const { price, seller, title, category, _id } = prod;
@@ -88,7 +88,12 @@ const ProductDetails = ({ prod, exists }) => {
       </Typography>
 
       <Stack direction="row" spacing={2}>
-        <Button size="large" variant="outlined" onClick={handleAddToCart}>
+        <Button
+          size="large"
+          disabled={!isAuth}
+          variant="outlined"
+          onClick={handleAddToCart}
+        >
           {!exists ? "Add to Cart" : "Go to cart "}{" "}
           <span style={{ marginLeft: "5px" }}>
             <ShoppingCartRounded fontSize="small" />
@@ -98,6 +103,7 @@ const ProductDetails = ({ prod, exists }) => {
           size="large"
           id="primaryBgColor"
           variant="contained"
+          disabled={!isAuth}
           onClick={handleBuyNow}
         >
           Buy Now

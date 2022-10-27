@@ -18,8 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./Redux/authSlice";
 import { setCart } from "./Redux/cartSlice";
 import BecomeSeller from "./User/BecomeSeller";
-
-import logo from "../assets/logo.png";
+import axios from "axios";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -138,7 +137,7 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
       sx={{ marginTop: "30px" }}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMyAccount}>Profile</MenuItem>
       <MenuItem onClick={handleMyAccount}>My account</MenuItem>
       <MenuItem onClick={handleBecomeSeller}>
         {userDet.type === "seller" || userDet.type === "admin"
@@ -149,6 +148,37 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
   const { pathname } = useLocation();
+
+  const [search, setSearch] = React.useState("");
+  const [searchData, setSearchData] = React.useState([]);
+  const [tId, setTId] = React.useState(null);
+  const [showDiv, setShowDiv] = React.useState(false);
+
+  const handleSearch = (e) => {
+    setShowDiv(false);
+    e.preventDefault();
+    setSearch(() => e.target.value);
+    if (tId) {
+      clearTimeout(tId);
+    }
+    if (search.length > 2) {
+      setTId(
+        setTimeout(() => {
+          axios
+            .get(
+              `${process.env.REACT_APP_SERVER_BASE_URL}/admin/prod/${search}`
+            )
+            .then((res) => {
+              setShowDiv(true);
+              setTimeout(() => {
+                setShowDiv(false);
+              }, 6000);
+              setSearchData(res.data);
+            });
+        }, 500)
+      );
+    }
+  };
 
   return (
     <Box
@@ -191,10 +221,39 @@ export default function PrimarySearchAppBar() {
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
+
             <StyledInputBase
               placeholder="Search…"
+              onInput={handleSearch}
+              value={search}
               inputProps={{ "aria-label": "search" }}
             />
+            <Box
+              zIndex={4000}
+              position="absolute"
+              backgroundColor="#F4EEFF"
+              color="black"
+              display={showDiv ? "block" : "none"}
+              width="100%"
+              borderRadius="5px"
+              boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px"
+            >
+              {searchData.map((elem) => (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  key={elem._id}
+                  onClick={() => {
+                    setSearch("");
+                    navigate(`product/${elem._id}`);
+                    setShowDiv(false);
+                  }}
+                >
+                  <p style={{ textAlign: "center" }}>{elem.title}</p>
+                </Box>
+              ))}
+            </Box>
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "flex", md: "flex" } }} gap={1}>
@@ -210,16 +269,7 @@ export default function PrimarySearchAppBar() {
               <Typography>{!isAuth ? "Login" : userDet.name}</Typography>
               <KeyboardArrowDownRoundedIcon />
             </IconButton>
-            {/* <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-              onClick={() => handleRightMenu("wishlist")}
-            >
-              <Badge badgeContent={4} color="secondary">
-                <FavoriteRoundedIcon />
-              </Badge>
-            </IconButton> */}
+
             <IconButton
               size="large"
               color="inherit"

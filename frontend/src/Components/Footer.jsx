@@ -5,6 +5,7 @@ import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import MailRoundedIcon from "@mui/icons-material/MailRounded";
 import { useLocation } from "react-router-dom";
+import MyFooter from "./Pages/MyFooter";
 
 const Footer = () => {
   const usefulLinks = [
@@ -42,12 +43,13 @@ const Footer = () => {
       >
         <Stack direction="column">
           <Typography variant="h6" mb={1} color="#424874">
-            My Store
+            Mern E-Shop
           </Typography>
           <Typography variant="body2" paragraph maxWidth={300}>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas
-            voluptates praesentium illum facilis sapiente quae quis, nesciunt
-            aspernatur unde aut voluptatem consequatur, earum molestias,
+            Mern E-Shop is a full stack web app developed by Abhishek, offering
+            a lot of features such as separate admin/seller/user page, real time
+            payment gateway, account verification on link click and a lot more.
+            Explore this app to know more features.
           </Typography>
         </Stack>
 
@@ -93,6 +95,7 @@ const Footer = () => {
           </Stack>
         </Stack>
       </Stack>
+      <MyFooter />
     </Box>
   );
 };

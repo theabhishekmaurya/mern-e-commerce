@@ -16,15 +16,13 @@ const ProductHome = () => {
   const [sort, setSort] = useState("");
   const totalPages = useRef();
 
-  console.log(filter, sort);
-
   useEffect(() => {
     setLoading(true);
     axios
       .get(
         `${
           process.env.REACT_APP_SERVER_BASE_URL
-        }/admin/show-products?page=${page}&limit=${8}&filter=${active}&sort=${sort}`
+        }/admin/show-products?page=${page}&limit=${10}&filter=${active}&sort=${sort}`
       )
       .then((res) => {
         setProducts(res.data.products);

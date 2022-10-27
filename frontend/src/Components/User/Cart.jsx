@@ -27,7 +27,7 @@ const Cart = () => {
       <Stack
         width={{ xs: "100%", md: "120%", xl: "60%" }}
         margin={{ xs: "none", xl: "0 30px" }}
-        height="500px"
+        height="450px"
         overflow="scroll"
         borderRadius="5px"
         justifyContent={cartItems.length == 0 ? "center" : ""}

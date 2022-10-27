@@ -8,7 +8,7 @@ const ProdItem = ({ item }) => {
   const navigate = useNavigate();
   return (
     <Box
-      height={{ xs: "380px", sm: "400px" }}
+      height={{ xs: "300px", sm: "400px" }}
       width={{ xs: "100%", md: "100%" }}
       className="prodItem"
       p="6px"
@@ -16,7 +16,7 @@ const ProdItem = ({ item }) => {
         navigate(`/product/${_id}`);
       }}
     >
-      <img height="70%" width="100%" src={image} />
+      <img height="70%" width="100%" alt={title} src={image} />
       <Typography className="textOverflow" m="15px 5px" variant="h6" mb="5px">
         {title}
       </Typography>
