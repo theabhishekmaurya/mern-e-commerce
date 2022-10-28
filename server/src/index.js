@@ -24,17 +24,17 @@ app.use("/admin", adminController);
 app.use("/cart", cartController);
 app.use("/address", addressController);
 app.use("/order", orderController);
-console.log(path.join(__dirname, "../frontend/build"));
-// app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-// app.get("*", function (_, res) {
-//   res.sendFile(
-//     path.join(__dirname, "../frontend/build/index.html"),
-//     function (err) {
-//       res.status(500).send(err);
-//     }
-//   );
-// });
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "../frontend/build/index.html"),
+    function (err) {
+      res.status(500).send(err);
+    }
+  );
+});
 
 app.listen(PORT, async () => {
   try {
