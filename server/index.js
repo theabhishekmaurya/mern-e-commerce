@@ -18,14 +18,6 @@ app.use(
   })
 );
 
-app.get("/api/test", (req, res) => {
-  res.send("test");
-});
-
-app.get("/api/test2", (req, res) => {
-  res.send("test");
-});
-
 app.use(express.json());
 
 app.use("/users", userController);
