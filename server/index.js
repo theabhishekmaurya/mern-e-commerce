@@ -27,6 +27,7 @@ app.get("/api/test2", (req, res) => {
 });
 
 app.use(express.json());
+
 app.use("/users", userController);
 app.use("/admin", adminController);
 app.use("/cart", cartController);

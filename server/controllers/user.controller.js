@@ -15,8 +15,8 @@ const newToken = (user) => {
 
 router.get("/", async (req, res) => {
   try {
-    // const users = await User.find().lean().exec();
-    res.send({ user: "123" });
+    const users = await User.find().lean().exec();
+    res.send(users);
   } catch (e) {
     res.send(e.message);
   }
