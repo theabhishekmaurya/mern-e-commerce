@@ -13,10 +13,10 @@ const newToken = (user) => {
   return jwt.sign({ user }, process.env.JWT_KEY);
 };
 
-router.get("", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const users = await User.find().lean().exec();
-    res.send(users);
+    // const users = await User.find().lean().exec();
+    res.send({ user: "123" });
   } catch (e) {
     res.send(e.message);
   }
