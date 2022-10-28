@@ -44,3 +44,5 @@ app.listen(PORT, async () => {
     console.log(e.message);
   }
 });
+
+module.exports = app;
