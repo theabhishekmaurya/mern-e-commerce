@@ -3,7 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -14,6 +14,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import axios from "axios";
 import AlertDialogSlide from "../AlertDialog";
+import { useSelector } from "react-redux";
 
 const theme = createTheme();
 
@@ -24,6 +25,7 @@ export default function SignUp() {
     email: "",
     password: "",
   });
+  const { isAuth } = useSelector((state) => state.auth);
 
   const [handleError, setHandleError] = React.useState(false);
   const [errors, setErrors] = React.useState([]);
@@ -81,7 +83,7 @@ export default function SignUp() {
         });
     }
   };
-
+  if (isAuth) return <Navigate to="/" />;
   return (
     <ThemeProvider theme={theme}>
       {handleError ? (

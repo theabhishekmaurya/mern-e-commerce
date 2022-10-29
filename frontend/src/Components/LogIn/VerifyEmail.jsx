@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-import { Box, Container } from "@mui/system";
+import { Box } from "@mui/system";
 import { Button, Typography } from "@mui/material";
 
 const VerifyEmail = () => {
