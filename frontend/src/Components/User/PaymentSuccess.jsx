@@ -29,7 +29,9 @@ const PaymentSuccess = () => {
             width="20%"
             src="https://c.tenor.com/0AVbKGY_MxMAAAAM/check-mark-verified.gif"
           />
-          <Typography variant="h4">Order placed successfully</Typography>
+          <Typography textAlign="center" variant="h4">
+            Order placed successfully
+          </Typography>
 
           <Link className="link" to="/all-products">
             <Button variant="contained" id="primaryBgColor">
@@ -43,7 +45,9 @@ const PaymentSuccess = () => {
             width="40%"
             src="https://cdn.dribbble.com/users/2469324/screenshots/6538803/comp_3.gif"
           />
-          <Typography variant="h4">Error 404! Page Not Found</Typography>
+          <Typography textAlign="center" variant="h4">
+            Error 404! Page Not Found
+          </Typography>
 
           <Link className="link" to="/">
             <Button variant="contained" id="primaryBgColor">

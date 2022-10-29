@@ -91,14 +91,18 @@ export default function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [products, setProducts] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
+    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/all-products`)
       .then((res) => {
         setProducts(res.data);
+        setLoading(false);
       })
       .catch((e) => {
         console.log(e.message);
+        setLoading(false);
       });
   }, []);
 
@@ -145,6 +149,7 @@ export default function CustomPaginationActionsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
+          {loading && <h6>Loading...</h6>}
           {(rowsPerPage > 0
             ? products.slice(
                 page * rowsPerPage,

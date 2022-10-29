@@ -32,6 +32,7 @@ export default function SignUp() {
   const [loading, setLoading] = React.useState("");
 
   const handleChange = (e) => {
+    setEmailMsg("");
     const { name, value } = e.target;
     setSuccess(false);
     setUserData({
@@ -53,6 +54,7 @@ export default function SignUp() {
       axios
         .post(`${process.env.REACT_APP_SERVER_BASE_URL}/users/signup`, userData)
         .then((res) => {
+          console.log(res.data);
           if (res.data.emailExists) {
             setEmailMsg(res.data.emailExists);
             setLoading(false);

@@ -91,15 +91,19 @@ export default function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [users, setUsers] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
+    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-users`)
       .then((res) => {
         console.log(res);
         setUsers(res.data);
+        setLoading(false);
       })
       .catch((e) => {
         console.log(e.message);
+        setLoading(false);
       });
   }, []);
 
@@ -164,6 +168,7 @@ export default function CustomPaginationActionsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
+          {loading && <h6>Loading...</h6>}
           {(rowsPerPage > 0
             ? users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : users

@@ -175,7 +175,7 @@ export default function PrimarySearchAppBar() {
               }, 6000);
               setSearchData(res.data);
             });
-        }, 500)
+        }, 100)
       );
     }
   };

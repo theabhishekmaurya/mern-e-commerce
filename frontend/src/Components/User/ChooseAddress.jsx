@@ -31,7 +31,6 @@ const ChooseAddress = () => {
       });
   }, []);
 
-  console.log(cartItems, prodId);
   const loadRazorpay = () => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -176,7 +175,7 @@ const ChooseAddress = () => {
             disabled={!selected}
             onClick={handleCheckout}
           >
-            Checkout
+            {selected ? "Checkout" : "select an address"}
           </Button>
         </Box>
       </Box>

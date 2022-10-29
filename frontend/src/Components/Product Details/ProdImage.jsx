@@ -8,7 +8,11 @@ const ProdImage = ({ image }) => {
       display="flex"
       justifyContent="center"
     >
-      <img width={{ xs: "100%", sm: "50%" }} src={image} />
+      <img
+        style={{ width: "20rem", objectFit: "cover" }}
+        height="100%"
+        src={image}
+      />
     </Box>
   );
 };

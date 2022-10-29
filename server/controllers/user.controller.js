@@ -65,10 +65,17 @@ router.post(
     .withMessage("must contain a number"),
   async (req, res) => {
     try {
-      const findUser = await User.find({
+      const findUser = await User.findOne({
         email: req.body.email,
-      }).countDocuments();
-      if (findUser != 0) {
+      });
+
+      if (findUser) {
+        if (!findUser.verified) {
+          return res.send({
+            emailExists:
+              "Email exists but not verified, please try logging in and verify your account",
+          });
+        }
         return res.send({
           emailExists: "Email already exists, please try logging in",
         });

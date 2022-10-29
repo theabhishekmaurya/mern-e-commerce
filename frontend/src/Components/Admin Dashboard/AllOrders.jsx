@@ -91,15 +91,19 @@ export default function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [orders, setOrders] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
+    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_SERVER_BASE_URL}/order/get-all`)
       .then((res) => {
         console.log("order", res.data);
         setOrders(res.data);
+        setLoading(false);
       })
       .catch((e) => {
         console.log(e.message);
+        setLoading(false);
       });
   }, []);
 
@@ -116,24 +120,6 @@ export default function CustomPaginationActionsTable() {
     setPage(0);
   };
 
-  // const approveSeller = (email) => {
-  //   axios
-  //     .post(
-  //       `${process.env.REACT_APP_SERVER_BASE_URL}/admin/approve-seller/${email}`
-  //     )
-  //     .then((res) => {
-  //       axios
-  //         .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-users`)
-  //         .then((res) => {
-  //           console.log(res);
-  //           setUsers(res.data);
-  //         });
-  //     })
-  //     .catch((res) => {
-  //       console.log(res);
-  //     });
-  // };
-
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
@@ -147,6 +133,7 @@ export default function CustomPaginationActionsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
+          {loading && <h6>Loading...</h6>}
           {(rowsPerPage > 0
             ? orders.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : orders
