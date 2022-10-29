@@ -10,7 +10,7 @@ const VerifyEmail = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_SERVER_BASE_URL}/users/${userId}/verify/${token}`
+        `${process.env.REACT_APP_SERVER_BASE_URL}/users/${userId}/verifyuser/${token}`
       )
       .then((res) => {
         console.log(res);
@@ -30,7 +30,9 @@ const VerifyEmail = () => {
             width="20%"
             src="https://c.tenor.com/0AVbKGY_MxMAAAAM/check-mark-verified.gif"
           />
-          <Typography variant="h4">Email Verified Successfully</Typography>
+          <Typography textAlign="center" variant="h4">
+            Email Verified Successfully
+          </Typography>
 
           <Link className="link" to="/signin">
             <Button variant="contained" id="primaryBgColor">
@@ -44,7 +46,9 @@ const VerifyEmail = () => {
             width="40%"
             src="https://cdn.dribbble.com/users/2469324/screenshots/6538803/comp_3.gif"
           />
-          <Typography variant="h4">Error 404! Page Not Found</Typography>
+          <Typography textAlign="center" variant="h4">
+            Error 404! Page Not Found
+          </Typography>
 
           <Link className="link" to="/signin">
             <Button variant="contained" id="primaryBgColor">

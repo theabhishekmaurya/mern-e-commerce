@@ -154,7 +154,7 @@ router.post("/signin", async (req, res) => {
 });
 
 //verify email
-router.get("/:id/verify/:token", async (req, res) => {
+router.get("/:id/verifyuser/:token", async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.params.id });
     if (!user) {
