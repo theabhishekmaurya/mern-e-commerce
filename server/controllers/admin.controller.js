@@ -126,6 +126,9 @@ router.get("/show-users", async (req, res) => {
     return res.status(404).send("Unauthorized");
   }
   const { user } = await verifyToken(token);
+  if (user.type != "admin") {
+    return res.status(404).send("Unauthorized");
+  }
   try {
     const users = await User.find().lean().exec();
     return res.send(users);
