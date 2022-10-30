@@ -121,6 +121,11 @@ router.get("/prod/:search", async (req, res) => {
 });
 
 router.get("/show-users", async (req, res) => {
+  const token = req.headers.token;
+  if (!token) {
+    return res.status(404).send("Unauthorized");
+  }
+  const { user } = await verifyToken(token);
   try {
     const users = await User.find().lean().exec();
     return res.send(users);

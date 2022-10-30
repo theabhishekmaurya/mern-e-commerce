@@ -16,6 +16,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { Button, TableHead } from "@mui/material";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 function TablePaginationActions(props) {
@@ -92,10 +93,13 @@ export default function CustomPaginationActionsTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [users, setUsers] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const { token } = useSelector((state) => state.auth);
   React.useEffect(() => {
     setLoading(true);
     axios
-      .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-users`)
+      .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-users`, {
+        headers: { token },
+      })
       .then((res) => {
         console.log(res);
         setUsers(res.data);
@@ -127,7 +131,9 @@ export default function CustomPaginationActionsTable() {
       )
       .then((res) => {
         axios
-          .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-users`)
+          .get(`${process.env.REACT_APP_SERVER_BASE_URL}/admin/show-users`, {
+            headers: { token },
+          })
           .then((res) => {
             console.log(res);
             setUsers(res.data);

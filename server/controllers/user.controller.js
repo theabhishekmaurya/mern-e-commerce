@@ -13,15 +13,6 @@ const newToken = (user) => {
   return jwt.sign({ user }, process.env.JWT_KEY);
 };
 
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find().lean().exec();
-    res.send(users);
-  } catch (e) {
-    res.send(e.message);
-  }
-});
-
 //get a user
 router.get("/user", async (req, res) => {
   try {
