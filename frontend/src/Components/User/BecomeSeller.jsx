@@ -62,13 +62,13 @@ export default function BecomeSeller({ setBecomeSeller, open }) {
       .then((res) => {
         setLoading(false);
         dispatch(login(res.data));
+        handleClose();
         setSellerReq(true);
       })
       .catch((e) => {
         console.log(e.message);
         setLoading(false);
       });
-    handleClose();
   };
   return (
     <div>

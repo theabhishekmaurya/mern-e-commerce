@@ -106,7 +106,7 @@ const ProductDetails = ({ prod, exists }) => {
           disabled={!isAuth}
           onClick={handleBuyNow}
         >
-          Buy Now
+          {isAuth ? "Buy Now" : "log in to continue"}
         </Button>
       </Stack>
     </Stack>
